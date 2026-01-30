@@ -10,12 +10,6 @@ SUBMISSION_PATH = "solution.csv"
 
 def build_features(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Строит признаки для reranking.
-
-    Ключевая идея:
-    В reranking важны относительные сигналы внутри запроса,
-    а не сложность модели.
-
     Использую:
     - поведенческий сигнал (click conversion)
     - совпадение категорий
@@ -24,7 +18,7 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     df = df.copy()
 
-    # В реальных данных всегда есть пропуски
+    # Работа с пропусками
     df["item_query_click_conv"] = df["item_query_click_conv"].fillna(0)
     df["price"] = df["price"].fillna(0)
 
@@ -71,7 +65,7 @@ X_test = test[FEATURES]
 """
 
 model = Pipeline([
-    ("scaler", StandardScaler()),          # нормализация признаков
+    ("scaler", StandardScaler()),# нормализация признаков
     ("lr", LogisticRegression(max_iter=1000))
 ])
 
@@ -79,9 +73,6 @@ print("Обучение модели...")
 model.fit(X_train, y_train)
 
 
-# ===============================
-# Reranking
-# ===============================
 print("Подсчет релевантности...")
 
 # Вероятность контакта = скор релевантности
